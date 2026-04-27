@@ -7,6 +7,7 @@ app = Flask(__name__)
 TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN")
 TELEGRAM_API = f"https://api.telegram.org/bot{TOKEN}"
 
+
 def send_message(chat_id, text, disable_preview=True):
     requests.post(
         f"{TELEGRAM_API}/sendMessage",
@@ -18,9 +19,11 @@ def send_message(chat_id, text, disable_preview=True):
         timeout=10,
     )
 
+
 @app.get("/")
 def home():
     return "Bot is running", 200
+
 
 @app.post("/webhook")
 def webhook():
@@ -49,7 +52,10 @@ def webhook():
     search_url = f"https://missav.ws/ko/search/{keyword_upper}"
     detail_url = f"https://missav.ws/ko/{keyword_lower}-uncensored-leak"
 
-    result = f"{search_url}\n\n{detail_url}"
-    send_message(chat_id, result, True)
+    # 첫 번째 링크: 미리보기 OFF
+    send_message(chat_id, search_url, True)
+
+    # 두 번째 링크: 미리보기 ON
+    send_message(chat_id, detail_url, False)
 
     return "OK", 200
